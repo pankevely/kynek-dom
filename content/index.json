@@ -1,0 +1,21 @@
+{
+  "entries": [
+    {"slug": "o-projekte", "title": "O projekte", "category": "Začnite tu", "updated": "2026-10-04",
+     "summary": "Čo je táto stránka, prečo vznikla a ako s ňou pracovať.", "reading": "3 min čítania"},
+    {"slug": "otazky-pre-rodicov", "title": "Otázky pre vás", "category": "Začnite tu", "updated": "2026-10-04",
+     "summary": "Ako chcete v dome žiť. Z odpovedí vznikne zadanie pre ďalší postup – stačí odpovedať hlasovou správou.", "reading": "10 min čítania"},
+    {"slug": "zistenia", "title": "Prvé zistenia z modelu", "category": "Zistenia", "updated": "2026-10-04",
+     "summary": "Orientácia na slnko, plochy miestností, šírka dverí a čo model zatiaľ neobsahuje.", "reading": "6 min čítania"},
+    {"slug": "plan-projektu", "title": "Plán projektu", "category": "Plán", "updated": "2026-10-04",
+     "summary": "Od zadania cez energiu a rozpočet až po projektanta a stavbu – čo nás čaká a v akom poradí.", "reading": "5 min čítania"},
+    {"slug": "slovnik", "title": "Slovník pojmov", "category": "Plán", "updated": "2026-10-04",
+     "summary": "A0, rekuperácia, tepelný most, stavebný zámer… stručne a zrozumiteľne.", "reading": "5 min čítania"}
+  ],
+  "waiting": [
+    {"text": "Odpovede na otázky o bývaní", "who": "rodičia – stačia hlasové správy Filipovi"},
+    {"text": "Predstava, z čoho majú byť steny, zateplenie, podlaha a strecha", "who": "otec"},
+    {"text": "Nový export modelu so všetkými vrstvami (strecha, pozemok)", "who": "otec – SketchUp: Edit → Unhide → All, potom export"},
+    {"text": "Čo je medzi základmi a podlahou (40 cm)", "who": "otec"},
+    {"text": "Potvrdiť názvy a účel miestností", "who": "otec"}
+  ]
+}

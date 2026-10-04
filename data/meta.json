@@ -1,0 +1,83 @@
+{
+ "pipeline_version": "0.1.0",
+ "generated": "2026-10-04T03:11",
+ "source": {
+  "dae": "model.dae",
+  "dwg": "model.json"
+ },
+ "floor_level_model_m": 1.5,
+ "figures": {
+  "built_up_area_m2": 171.59,
+  "built_up_area_incl_insulation_m2": 181.57,
+  "usable_area_m2": 144.54,
+  "outer_walls_m3": 47.33,
+  "foundations_m3": 31.73,
+  "rooms": 11
+ },
+ "categories": [
+  {
+   "key": "obvodove_mury",
+   "label": "Obvodové múry",
+   "visible": true,
+   "faces": 328
+  },
+  {
+   "key": "nosna_pricka",
+   "label": "Nosná priečka",
+   "visible": true,
+   "faces": 44
+  },
+  {
+   "key": "pricky",
+   "label": "Priečky",
+   "visible": true,
+   "faces": 272
+  },
+  {
+   "key": "zateplenie",
+   "label": "Zateplenie",
+   "visible": true,
+   "faces": 346
+  },
+  {
+   "key": "podlaha",
+   "label": "Podlahy",
+   "visible": true,
+   "faces": 296
+  },
+  {
+   "key": "zaklady",
+   "label": "Základy",
+   "visible": false,
+   "faces": 300
+  },
+  {
+   "key": "dvere",
+   "label": "Dvere",
+   "visible": true,
+   "faces": 17576
+  },
+  {
+   "key": "okna",
+   "label": "Okná",
+   "visible": true,
+   "faces": 420
+  },
+  {
+   "key": "portaly",
+   "label": "Posuvné portály",
+   "visible": true,
+   "faces": 396
+  },
+  {
+   "key": "zariadenie",
+   "label": "Zariadenie",
+   "visible": true,
+   "faces": 21156
+  }
+ ],
+ "assumptions": {
+  "ceiling_clear_height_m": 2.6,
+  "house_rotation_deg": 3.7
+ }
+}
