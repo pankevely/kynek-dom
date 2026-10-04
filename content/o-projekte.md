@@ -1,6 +1,6 @@
 # O projekte
 
-Táto stránka je pracovný priestor pre náš rodinný dom v Kynku. Nájdete tu vždy najnovší stav: model domu, ktorým sa dá prejsť, zistenia, otázky a ďalšie kroky.
+Táto stránka je pracovný priestor pre náš rodinný dom na Kyneku. Nájdete tu vždy najnovší stav: model domu, ktorým sa dá prejsť, zistenia, otázky a ďalšie kroky.
 
 ## Prečo vznikla
 

@@ -1,10 +1,10 @@
-// Dom v Kynku – app shell: routing, home, notebook (Markdown reader), about.
+// Dom na Kyneku – app shell: routing, home, notebook (Markdown reader), about.
 import { marked } from './vendor/marked.esm.js';
 import DOMPurify from './vendor/purify.es.mjs';
 
 const view = document.getElementById('view');
 const walkView = document.getElementById('walk-view');
-const S = { index: null, meta: null, rooms: null, walls: null, walk: null, walkLoading: null };
+const S = { index: null, versions: null, version: null, meta: null, rooms: null, walls: null, walk: null, walkLoading: null };
 
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
@@ -24,12 +24,20 @@ async function getJSON(url) {
   return r.json();
 }
 async function loadCore() {
-  if (!S.index) {
-    [S.index, S.meta, S.rooms, S.walls] = await Promise.all([
-      getJSON('content/index.json'), getJSON('data/meta.json'), getJSON('data/rooms.json'), getJSON('data/walls.json'),
-    ]);
-  }
+  if (S.index) return;
+  [S.index, S.versions] = await Promise.all([getJSON('content/index.json'), getJSON('data/versions.json')]);
+  const ids = S.versions.versions.map((v) => v.id);
+  const saved = store.get('kynek.version');
+  S.version = ids.includes(saved) ? saved : S.versions.current;
+  const base = `data/${S.version}/`;
+  [S.meta, S.rooms, S.walls] = await Promise.all([getJSON(base + 'meta.json'), getJSON(base + 'rooms.json'), getJSON(base + 'walls.json')]);
+  S.base = base;
 }
+function switchVersion(id) {
+  store.set('kynek.version', id);
+  location.reload();
+}
+window.addEventListener('kynek:version', (e) => switchVersion(e.detail));
 
 // ───────────────────────── Router
 const routes = { domov: renderHome, prechadzka: renderWalk, zapisnik: renderNotebook, 'o-projekte': renderAbout };
@@ -104,14 +112,14 @@ function renderHome() {
       <figure class="plan-card">
         <span class="plan-hint">Kliknite na miestnosť a vstúpte do nej</span>
         ${planSVG()}
-        <figcaption><span>Pôdorys z modelu · rez vo výške 1 m</span><span>Názvy miestností sú pracovné</span></figcaption>
+        <figcaption><span>${esc(S.meta.label || 'Pôdorys z modelu')} · rez vo výške 1 m</span><span>Názvy miestností sú pracovné</span></figcaption>
       </figure>
     </section>
 
     <section class="figures" aria-label="Základné údaje">
       <div class="figure"><b>${nf(f.usable_area_m2)}<small>m²</small></b><span>úžitková plocha (${f.rooms} miestností)</span></div>
       <div class="figure"><b>${nf(f.built_up_area_m2)}<small>m²</small></b><span>zastavaná plocha</span></div>
-      <div class="figure"><b>728<small>m²</small></b><span>pozemok · dom zaberá ~25 %</span></div>
+      <div class="figure"><b>${S.versions.plot_m2 || '–'}<small>m²</small></b><span>pozemok · dom zaberá ~${S.versions.plot_m2 ? Math.round(f.built_up_area_incl_insulation_m2 / S.versions.plot_m2 * 100) : '–'} %</span></div>
       <div class="figure"><b>1<small>podlažie</small></b><span>všetko na jednej úrovni</span></div>
     </section>
 
@@ -128,12 +136,37 @@ function renderHome() {
         <ol class="waiting">${S.index.waiting.map((w) => `<li>${esc(w.text)}${w.who ? `<small>${esc(w.who)}</small>` : ''}</li>`).join('')}</ol>
       </div>
     </section>
+    ${versionsSection()}
     ${footer()}
   </div>`;
+  view.querySelectorAll('[data-version]').forEach((b) => b.addEventListener('click', () => switchVersion(b.dataset.version)));
+}
+
+function versionsSection() {
+  const vs = [...S.versions.versions].reverse();
+  const f = (v, k, d = 1) => (v.figures[k] == null ? '–' : nf(v.figures[k], d));
+  return `
+    <section class="versions">
+      <div class="section-title"><h2>Verzie návrhu</h2><span class="muted">${vs.length} ${vs.length === 1 ? 'verzia' : vs.length < 5 ? 'verzie' : 'verzií'}</span></div>
+      <div class="table-scroll"><table class="vtable">
+        <thead><tr><th>Verzia</th><th>Dátum</th><th class="num">Úžitková plocha</th><th class="num">Zastavaná plocha</th><th class="num">Miestnosti</th><th></th></tr></thead>
+        <tbody>${vs.map((v) => `
+          <tr class="${v.id === S.version ? 'is-current' : ''}">
+            <td><b>${esc(v.label)}</b>${v.note ? `<small>${esc(v.note)}</small>` : ''}</td>
+            <td>${dateSk(v.date)}</td>
+            <td class="num">${f(v, 'usable_area_m2')} m²</td>
+            <td class="num">${f(v, 'built_up_area_m2')} m²</td>
+            <td class="num">${v.figures.rooms}</td>
+            <td class="num">${v.id === S.version ? '<span class="badge quiet">Zobrazená</span>' : `<button class="btn small" type="button" data-version="${v.id}">Zobraziť</button>`}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>
+      <p class="muted small">Každá verzia je samostatný export modelu. Prepnutím sa zmení pôdorys, čísla aj prechádzka. Novú verziu pridáme, keď otec pošle nový export.</p>
+    </section>`;
 }
 
 function footer() {
-  return `<footer class="footer"><span>Dom v Kynku · pracovná verzia</span><span>Údaje z modelu: ${esc(S.meta.generated.replace('T', ' '))}</span></footer>`;
+  return `<footer class="footer"><span>Dom na Kyneku · pracovná verzia</span><span>Zobrazená verzia: ${esc(S.meta.label || S.version)} · údaje z ${esc(S.meta.generated.replace('T', ' '))}</span></footer>`;
 }
 
 // ───────────────────────── Notebook
@@ -209,7 +242,7 @@ async function renderAbout() {
 // ───────────────────────── Walk-through (lazy-loaded)
 async function renderWalk([roomId]) {
   if (!S.walk) {
-    if (!S.walkLoading) S.walkLoading = import('./walk.js').then((m) => m.createWalk(walkView, { rooms: S.rooms, walls: S.walls, meta: S.meta }));
+    if (!S.walkLoading) S.walkLoading = import('./walk.js').then((m) => m.createWalk(walkView, { rooms: S.rooms, walls: S.walls, meta: S.meta, base: S.base, versions: S.versions, version: S.version }));
     try { S.walk = await S.walkLoading; } catch (e) { S.walkLoading = null; throw e; }
   }
   S.walk.show(roomId || null);

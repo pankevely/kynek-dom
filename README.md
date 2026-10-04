@@ -1,4 +1,4 @@
-# Dom v Kynku
+# Dom na Kyneku
 
 Pracovný web projektu rodinného domu – https://pankevely.github.io/kynek-dom/
 

@@ -1962,11 +1962,11 @@
   ]
  },
  {
-  "id": "chodba",
-  "name": "Chodba",
-  "short": "Chodba",
-  "kind": "hall",
-  "provisional": false,
+  "id": "miestnost-4",
+  "name": "Miestnosť 4",
+  "short": "M4",
+  "kind": "room",
+  "provisional": true,
   "area_m2": 14.06,
   "polygon": [
    [

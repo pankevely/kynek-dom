@@ -291,3 +291,17 @@ kbd { display: inline-block; min-width: 26px; padding: 3px 7px; border: 1px soli
 }
 .mode-walk .w-panel, .mode-walk .w-panel-toggle, .mode-walk .w-labels { display: none !important; }
 .mode-orbit .w-joy, .mode-orbit .w-run, .mode-orbit .w-cross, .mode-orbit .w-start, .mode-orbit .w-help { display: none !important; }
+
+/* ───────── Versions ───────── */
+.versions { margin: 0 0 56px; }
+.muted { color: var(--muted); font-size: 14px; }
+.muted.small { font-size: 13px; margin-top: 12px; }
+.vtable { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+.vtable th { text-align: left; font-weight: 600; font-size: 12.5px; color: var(--muted); border-bottom: 1px solid var(--ink); padding: 8px 12px 8px 0; white-space: nowrap; }
+.vtable td { border-bottom: 1px solid var(--rule-2); padding: 12px 12px 12px 0; vertical-align: middle; }
+.vtable td small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.vtable .num { text-align: right; white-space: nowrap; }
+.vtable tr.is-current td:first-child b { color: var(--accent); }
+.btn.small { padding: 6px 12px; font-size: 13px; }
+.badge.quiet { background: var(--paper-2); color: var(--ink-2); }
+.w-version { width: 100%; padding: 7px 10px; border: 1px solid var(--rule); border-radius: 10px; background: var(--card); color: var(--ink); font: 500 14px var(--sans); }

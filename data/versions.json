@@ -1,0 +1,21 @@
+{
+ "plot_m2": 728,
+ "current": "v1",
+ "versions": [
+  {
+   "id": "v1",
+   "label": "Pôvodný návrh",
+   "note": "Otcov model zo SketchUpu (export september 2026).",
+   "date": "2026-09-29",
+   "figures": {
+    "built_up_area_m2": 171.59,
+    "built_up_area_incl_insulation_m2": 181.57,
+    "usable_area_m2": 144.54,
+    "outer_walls_m3": 47.33,
+    "foundations_m3": 37.02,
+    "rooms": 11
+   },
+   "classification": "dwg"
+  }
+ ]
+}

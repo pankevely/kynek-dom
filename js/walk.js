@@ -1,4 +1,4 @@
-// Dom v Kynku – 3D walk-through (first-person) + model view (orbit, cutaway, layers, sun).
+// Dom na Kyneku – 3D walk-through (first-person) + model view (orbit, cutaway, layers, sun).
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -8,7 +8,6 @@ const RADIUS = 0.25;         // walker radius for collision (m)
 const SPEED_WALK = 1.4;      // m/s
 const SPEED_RUN = 3.5;       // m/s
 const LAT = 48.31, LON = 18.04;   // rounded on purpose (~1 km) – enough for sun position
-const SPAWN = { x: 4.5, z: -4.2, yaw: Math.PI };   // outside the entrance (street side), facing the house
 
 const CAT_STYLE = {
   obvodove_mury: { color: 0xf1efe9, edges: true },
@@ -18,10 +17,11 @@ const CAT_STYLE = {
   zaklady: { color: 0xa8a49b, edges: true },
 };
 
-export async function createWalk(root, { rooms, walls, meta }) {
+export async function createWalk(root, { rooms, walls, meta, base = 'data/', versions = null, version = null }) {
   const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
   const ceilingH = meta.assumptions?.ceiling_clear_height_m ?? 2.6;
   const rot = THREE.MathUtils.degToRad(meta.assumptions?.house_rotation_deg ?? 0);
+  const SPAWN = meta.spawn || { x: 4.5, z: -4.2, yaw: Math.PI };   // in front of the entrance, facing the house
 
   // ── DOM
   root.innerHTML = `
@@ -50,6 +50,10 @@ export async function createWalk(root, { rooms, walls, meta }) {
           <input type="range" class="sun" min="300" max="1290" step="15" value="840" aria-label="Čas dňa">
           <p class="note sun-note"></p>
         </section>
+        ${versions && versions.versions.length > 1 ? `<section>
+          <h4>Verzia návrhu</h4>
+          <select class="w-version" aria-label="Verzia návrhu">${versions.versions.map((v) => `<option value="${v.id}" ${v.id === version ? 'selected' : ''}>${v.label}</option>`).join('')}</select>
+        </section>` : ''}
         <section>
           <h4>Vrstvy</h4>
           <div class="layers"></div>
@@ -153,7 +157,7 @@ export async function createWalk(root, { rooms, walls, meta }) {
   const catMats = {};
   for (const [k, s] of Object.entries(CAT_STYLE)) catMats[k] = new THREE.MeshStandardMaterial({ color: s.color, roughness: 0.95, side: THREE.DoubleSide, clippingPlanes: clip });
 
-  const gltf = await new GLTFLoader().loadAsync('data/model.glb', (ev) => {
+  const gltf = await new GLTFLoader().loadAsync(base + 'model.glb', (ev) => {
     const p = ev.total ? ev.loaded / ev.total : 0.5;
     $('.w-loading .bar i').style.width = `${Math.round(p * 100)}%`;
   });
@@ -216,6 +220,8 @@ export async function createWalk(root, { rooms, walls, meta }) {
     ground.visible = !(mode === 'orbit' && catVisible.zaklady);
     ceiling.visible = roof.visible = mode === 'walk';
   }
+
+  root.querySelector('.w-version')?.addEventListener('change', (e) => window.dispatchEvent(new CustomEvent('kynek:version', { detail: e.target.value })));
 
   // ── Cutaway
   const cutInput = $('.cut');
